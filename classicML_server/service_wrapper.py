@@ -1,15 +1,20 @@
-from classicML_server import predict
+"""将服务添加上路由信息."""
+import json
+
 from classicML_server import service_app
-from classicML_server import load_model
+from classicML_server.service import predict
+from classicML_server.core import load_model
 
 
 @service_app.route('/predict', methods=['POST'])
 def service_wrapper():
-    with open('.classicML-server/server.conf', mode='r') as fp:
-        conf = fp.readlines()
+    """服务修饰器, 将服务映射到服务器后台.
+    """
+    with open('.classicML-server/conf.json', mode='r') as fp:
+        conf = json.load(fp)
 
-    # TODO(Steve R. Sun): 模型加载需要改进成, 仅启动一次.
-    model = load_model(model_type=conf[0][:-1],
-                       model_path=conf[1][:-1])
+    # TODO(Steve R. Sun): 模型加载应仅硬启动一次.
+    model = load_model(model_type=conf['model_type'],
+                       model_path=conf['model_path'])
 
     return predict.predict_service(model)

@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='classicML-server',
-    version='0.1a1',
+    version='0.1a2',
     description='classicML web service',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -29,7 +29,7 @@ setup(
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
-              'classicML-server = classicML_server.main:main'
+              'classicML-server = classicML_server.console:main'
         ]
     },
 )
