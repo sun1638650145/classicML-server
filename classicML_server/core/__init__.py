@@ -1,1 +1,1 @@
-from classicML_server.core.loading import load_model
+from classicML_server.core.model import load_model

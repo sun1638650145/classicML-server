@@ -1,16 +1,16 @@
-import numpy as np
+import os
 
-from flask import request
-from flask import jsonify
+import numpy as np
+from flask import jsonify, request
 
 from classicML_server import CLASSICML_SERVER_LOGGER
+from classicML_server.core import load_model
+from classicML_server.service import predict_bp
 
 
-def predict_service(model):
-    """classicML-server的预测服务API.
-
-    Arguments:
-        model: cml.models.Model, cml的模型实例.
+@predict_bp.route('/', methods=['POST'])
+def predict():
+    """classicML-server的预测服务api.
 
     Returns:
         JSON格式的信息, 正确将是模型预测的结果信息, 错误的话就是异常信息.
@@ -20,14 +20,17 @@ def predict_service(model):
     """
     data = request.get_json()
 
+    # 加载模型.
+    model = load_model(os.environ['CMLS_MT'], os.environ['CMLS_MP'])
+
     try:
         x = np.asarray(data['x'])
         if len(x.shape) == 1:
             x = np.expand_dims(x, axis=0)
         y_preds = model.predict(x).tolist()
     except KeyError:
-        CLASSICML_SERVER_LOGGER.error('接收的JSON格式异常, 无法解析.')
+        CLASSICML_SERVER_LOGGER.error('服务器接收的JSON格式异常, 无法解析.')
 
-        return jsonify({'information': 'The received JSON format is abnormal and cannot be parsed.'})
+        return jsonify({'information': 'The received JSON format by the server is abnormal and cannot be parsed.'})
 
     return jsonify({'predictions': y_preds})

@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
-with open('README.md', 'r') as fh:
-    long_description = fh.read()
+with open('README.md', 'r') as fp:
+    long_description = fp.read()
 
 setup(
     name='classicML-server',
-    version='0.1a2',
+    version='0.1a3',
     description='classicML web service',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -22,9 +22,10 @@ setup(
     ],
     license='Apache Software License',
     install_requires=[
-        'classicML==0.6',
+        'classicML>=0.6, <0.7',
         'flask>=1.1.2',
-        'gunicorn>=20.1.0',
+        'numpy>=1.19.2, <=1.19.4',
+        'waitress>=2.0.0',
     ],
     python_requires='>=3.6',
     entry_points={
