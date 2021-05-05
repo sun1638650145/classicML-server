@@ -3,13 +3,11 @@ __version__ = '0.1a3'
 
 import logging
 
+from flask import Flask
+
 # 配置系统logger
 logging.basicConfig(level=logging.INFO)
 CLASSICML_SERVER_LOGGER = logging.getLogger(name='classicML-server')
-
-from flask import Flask
-
-from classicML_server.core import load_model
 
 
 def create_app():

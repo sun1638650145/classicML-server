@@ -16,21 +16,22 @@ def predict():
         JSON格式的信息, 正确将是模型预测的结果信息, 错误的话就是异常信息.
 
     Raises:
-        KeyError: 接收的JSON格式异常, 无法解析.
+        KeyError: 服务器接收的JSON格式异常, 无法解析.
+        OSError: 服务器内部异常.
     """
     data = request.get_json()
 
-    # 加载模型.
-    model = load_model(os.environ['CMLS_MT'], os.environ['CMLS_MP'])
-
     try:
+        model = load_model(os.environ['CMLS_MT'], os.environ['CMLS_MP'])
+
         x = np.asarray(data['x'])
         if len(x.shape) == 1:
             x = np.expand_dims(x, axis=0)
         y_preds = model.predict(x).tolist()
+
+        return jsonify({'predictions': y_preds})
     except KeyError:
         CLASSICML_SERVER_LOGGER.error('服务器接收的JSON格式异常, 无法解析.')
-
         return jsonify({'information': 'The received JSON format by the server is abnormal and cannot be parsed.'})
-
-    return jsonify({'predictions': y_preds})
+    except OSError:
+        return jsonify({'information': 'The service is currently abnormal.'})
