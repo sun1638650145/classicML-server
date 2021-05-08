@@ -2,6 +2,7 @@
 __version__ = '0.1a3'
 
 import logging
+import os
 
 from flask import Flask
 
@@ -20,6 +21,8 @@ def create_app():
     app = Flask(__name__)
 
     from classicML_server.service import predict
-    app.register_blueprint(predict.predict_bp)
+
+    if os.environ['CMLS_SM'] == 'predict_service':
+        app.register_blueprint(predict.predict_bp)
 
     return app
