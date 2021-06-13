@@ -6,6 +6,7 @@ from flask import jsonify, request
 from classicML_server import CLASSICML_SERVER_LOGGER
 from classicML_server.core import load_model
 from classicML_server.service import predict_bp
+from classicML_server.utils.status_codes import STATUS_CODES
 
 
 @predict_bp.route('/', methods=['POST'])
@@ -20,6 +21,7 @@ def predict():
         OSError: 服务器内部异常.
     """
     data = request.get_json()
+    response_dict = dict()
 
     try:
         model = load_model(os.environ['CMLS_MT'], os.environ['CMLS_MP'])
@@ -29,9 +31,16 @@ def predict():
             x = np.expand_dims(x, axis=0)
         y_preds = model.predict(x).tolist()
 
-        return jsonify({'predictions': y_preds})
-    except KeyError:
+        response_dict['status_code'] = STATUS_CODES['OK']
+        response_dict['predictions'] = y_preds
+    except (KeyError, ValueError):
         CLASSICML_SERVER_LOGGER.error('服务器接收的JSON格式异常, 无法解析.')
-        return jsonify({'information': 'The received JSON format by the server is abnormal and cannot be parsed.'})
+
+        response_dict['status_code'] = STATUS_CODES['INVALID_REQUEST']
+        response_dict['error'] = 'The received JSON format by the server is abnormal and cannot be parsed.'
     except OSError:
-        return jsonify({'information': 'The service is currently abnormal.'})
+
+        response_dict['status_code'] = STATUS_CODES['INTERNAL_SERVER_ERROR']
+        response_dict['error'] = 'The service is currently abnormal.'
+
+    return jsonify(response_dict)

@@ -5,7 +5,7 @@ with open('README.md', 'r') as fp:
 
 setup(
     name='classicML-server',
-    version='0.1a3',
+    version='0.1a4',
     description='classicML web service',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -22,12 +22,12 @@ setup(
     ],
     license='Apache Software License',
     install_requires=[
-        'classicML>=0.6, <0.7',
-        'flask>=1.1.2',
-        'numpy>=1.19.2, <=1.19.4',
+        'classicML>=0.6.1, <0.7',
+        'flask>=2.0.0, <=2.0.1',
+        'numpy>=1.20.0, <=1.20.3',
         'waitress>=2.0.0',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     entry_points={
         'console_scripts': [
               'classicML-server = classicML_server.console:main'
