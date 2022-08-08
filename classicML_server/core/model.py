@@ -18,12 +18,18 @@ def load_model(model_type, model_path):
         AttributeError: 模型加载失败, 请检查你的模型名称.
     """
     if 'model' not in g:
-        if model_type in ('AveragedOneDependentEstimator', 'AODE'):
+        if model_type == 'AdaBoostClassifier':
+            g.model = cml.models.AdaBoostClassifier()
+        elif model_type in ('AveragedOneDependentEstimator', 'AODE'):
             g.model = cml.models.AveragedOneDependentEstimator()
         elif model_type in ('BackPropagationNeuralNetwork', 'BPNN'):
             g.model = cml.models.BackPropagationNeuralNetwork()
+        elif model_type == 'BaggingClassifier':
+            g.model = cml.models.BaggingClassifier()
         elif model_type == 'DecisionTreeClassifier':
             g.model = cml.models.DecisionTreeClassifier()
+        elif model_type == 'KMeans':
+            g.model = cml.models.KMeans()
         elif model_type in ('LinearDiscriminantAnalysis', 'LDA'):
             g.model = cml.models.LinearDiscriminantAnalysis()
         elif model_type == 'LogisticRegression':

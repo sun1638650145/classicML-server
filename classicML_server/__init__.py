@@ -1,5 +1,5 @@
 """classicML web service."""
-__version__ = '0.1a3'
+__version__ = '0.1a5'
 
 import logging
 import os
@@ -33,5 +33,8 @@ def create_app():
         app.register_blueprint(fit.fit_bp)
     elif os.environ['CMLS_SM'] == 'predict_service':
         app.register_blueprint(predict.predict_bp)
+    else:
+        CLASSICML_SERVER_LOGGER.error('请检查你启动的服务名.')
+        raise ValueError('不能识别你启动的服务, ')
 
     return app
